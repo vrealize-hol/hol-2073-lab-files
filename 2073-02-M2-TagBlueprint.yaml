@@ -1,0 +1,66 @@
+formatVersion: 1
+inputs:
+  size:
+    type: string
+    enum:
+      - micro
+      - small
+    default: small
+    description: What size VM
+    title: T-Shirt Size
+  platform:
+    type: string
+    enum:
+      - vsphere
+      - aws
+    default: vsphere
+    description: Deploy to which platform
+    title: Platform
+  env:
+    type: string
+    enum:
+      - dev
+    default: dev
+    description: There can only be DEV
+    title: Environment
+resources:
+  On-Prem_VM:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      name: onpremvm
+      image: CentOS7
+      flavor: '${input.size}'
+      constraints:
+        - tag: '${"hol.cloud.zone.platform:" + (input.platform) + ":soft"}'
+        - tag: '${"hol.cloud.zone.env:" + (input.env)}'
+      networks:
+        - network: '${resource.Network_1.id}'
+          assignment: static
+          assignPublicIpAddress: false
+      customizationSpec: CentOS
+  Cloud_VM:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 1
+    properties:
+      name: cloudvm
+      image: CentOS7
+      flavor: '${input.size}'
+      constraints:
+        - tag: '!${"hol.cloud.zone.platform:" + (input.platform) + ":hard"}'
+        - tag: '${"hol.cloud.zone.env:" + (input.env)}'
+  Network_1:
+    type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      name: vsphere-networks
