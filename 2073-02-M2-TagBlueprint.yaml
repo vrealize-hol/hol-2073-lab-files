@@ -26,10 +26,6 @@ inputs:
 resources:
   On-Prem_VM:
     type: Cloud.Machine
-    metadata:
-      layoutPosition:
-        - 0
-        - 0
     properties:
       name: onpremvm
       image: CentOS7
@@ -44,23 +40,15 @@ resources:
       customizationSpec: CentOS
   Cloud_VM:
     type: Cloud.Machine
-    metadata:
-      layoutPosition:
-        - 0
-        - 1
     properties:
       name: cloudvm
       image: CentOS7
       flavor: '${input.size}'
       constraints:
-        - tag: '!${"hol.cloud.zone.platform:" + (input.platform) + ":hard"}'
+        - tag: '${"hol.cloud.zone.platform:" + (input.platform == "vsphere" ? "aws" : "aws") + ":hard"}'
         - tag: '${"hol.cloud.zone.env:" + (input.env)}'
   Network_1:
     type: Cloud.Network
-    metadata:
-      layoutPosition:
-        - 1
-        - 0
     properties:
       networkType: existing
       name: vsphere-networks
