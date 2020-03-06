@@ -7,7 +7,7 @@ def get_vlp_urn():
     # this uses a VLP-set property named "vlp_vapp_urn" and will only work for a pod deployed by VLP
 
     tools_location = 'C:\\Program Files\\VMware\\VMware Tools\\vmtoolsd.exe'
-    command = '--cmd "info-get guestinfo.ovfev"'
+    command = '--cmd "info-get guestinfo.ovfenv"'
     full_command = tools_location + " " + command
 
     if os.path.isfile(tools_location):
