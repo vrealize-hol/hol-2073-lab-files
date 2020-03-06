@@ -19,7 +19,7 @@ def get_vlp_urn():
             try:
                 urn = re.search('urn:vcloud:vapp:(.+?)"/>', txt_response).group(1)
             except:
-                return "Error: no urn parameter found"
+                return "vPod was not deployed by VLP"
 
             if len(urn) > 0:
                 return urn
