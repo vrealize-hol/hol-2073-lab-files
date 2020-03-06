@@ -16,7 +16,7 @@ def get_vlp_urn():
         txt_response = byte_response.decode("utf-8")
 
         try:
-            urn = re.search('urn:vloud:vapp:(.+?)"/>', txt_response).group(1)
+            urn = re.search('urn:vcloud:vapp:(.+?)"/>', txt_response).group(1)
         except:
             return "Error: no urn parameter found"
 
