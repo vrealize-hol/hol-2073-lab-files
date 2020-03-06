@@ -11,19 +11,23 @@ def get_vlp_urn():
     full_command = tools_location + " " + command
 
     if os.path.isfile(tools_location):
-        response = subprocess.run(full_command, stdout=subprocess.PIPE)
-        byte_response = response.stdout
-        txt_response = byte_response.decode("utf-8")
-
         try:
-            urn = re.search('urn:vcloud:vapp:(.+?)"/>', txt_response).group(1)
-        except:
-            return "Error: no urn parameter found"
+            response = subprocess.run(full_command, stdout=subprocess.PIPE)
+            byte_response = response.stdout
+            txt_response = byte_response.decode("utf-8")
 
-        if len(urn) > 0:
-            return urn
-        else: 
-            return "Error: no urn value found"
+            try:
+                urn = re.search('urn:vcloud:vapp:(.+?)"/>', txt_response).group(1)
+            except:
+                return "Error: no urn parameter found"
+
+            if len(urn) > 0:
+                return urn
+            else: 
+                return "Error: no urn value found"
+        
+        except:
+            return "vPod was not deployed by VLP"
 
     else:
         return "Error: VMware tools not found"
