@@ -2,16 +2,7 @@
 ## If you are deploying this vPod dircetly in OneCloud and not as part of a Hands On Lab,
 ## you must uncomment the following lines and supply your own set of AWS and Azure keys
 #################################
-# awsid = "AKIAIZKKBBNYFORM7IFQ"
-# awssec = "KvGvRC2VUBVaV7XmzNHnUmnsiJ7cuRoVlmoc0rCb"
-# azsub = "4c661d5f-5f06-4545-8a79-b9ae996182ef"
-# azten = "b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0"
-# azappkey = "495a6319-0c24-4db4-8b5c-73c6844eed61"
-# azappid = "4CCuqR3SolD3YGnN/m1wNUmQhReVP0B315QD5Qcfz6k="
 
-d_id = "AKIAJFTWIIW4KAYPRBYQ"
-d_sec = "mnhVinBrVnVZ4NyJ9KHHFDNb11T+5G3gE1fgK/Dl"
-d_reg = "us-west-1"
 
 
 
