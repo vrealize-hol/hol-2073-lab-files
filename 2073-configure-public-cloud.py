@@ -752,6 +752,7 @@ def create_azure_image():
 
 #check to see if this vPod was deployed by VLP (is it an active Hands on Lab?)
 result = get_vlp_urn()
+hol = True
 if 'No urn' in result:
     # this pod was not deployed by VLP = keys must be defined at top of this file
     hol = False
