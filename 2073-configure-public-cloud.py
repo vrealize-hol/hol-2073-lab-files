@@ -681,10 +681,10 @@ def create_aws1_image():
                   "description": "Image Profile for AWS1 Images",
                   "imageMapping" : {
                     "CentOS7": {
-                        "name": "base-centos-7-x-hvm-22092017-201709221017"
+                        "name": "ami-a83d0cc8"
                     },
                     "Ubuntu": {
-                        "name": "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20171026.1"
+                        "name": "ami-1c1d217c"
                     }
                   },
                   "regionId": aws_id
@@ -706,10 +706,10 @@ def create_aws2_image():
                   "description": "Image Profile for AWS2 Images",
                   "imageMapping" : {
                     "CentOS7": {
-                        "name": "base-centos-7-x-hvm-22092017-201709221017"
+                        "name": "ami-a6629ede"
                     },
                     "Ubuntu": {
-                        "name": "ubuntu/images/hvm-ssd/ubuntu-xenial-16.04-amd64-server-20171026.1"
+                        "name": "ami-0a00ce72"
                     }
                   },
                   "regionId": aws_id
