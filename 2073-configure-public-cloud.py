@@ -1,9 +1,13 @@
 ####### I M P O R T A N T #######
-## If you are deploying this vPod dircetly in OneCloud and not as part of a Hands On Lab,
+## If you are deploying this vPod dircetly in OneCloud and not through the Hands On Lab portal,
 ## you must uncomment the following lines and supply your own set of AWS and Azure keys
 #################################
-
-
+# awsid = "put your AWS access key here"
+# awssec = "put your AWS secret hey here"
+# azsub = "put your azure subscription id here"
+# azten = "put your azure tenant id here"
+# azappkey = "put your azure application key here"
+# azappid = "put your azure application id here"
 
 
 import json
@@ -11,8 +15,6 @@ import requests
 import time
 import os
 import traceback
-import urllib3
-urllib3.disable_warnings()
 import boto3
 from boto3.dynamodb.conditions import Key, Attr
 from random import seed, randint
@@ -22,18 +24,24 @@ from time import strftime
 import subprocess
 import re
 import sys
-
-# set internet proxy for HOL environment
-#proxies = {
-#    "http": "http://192.168.110.1:3128"
-#    "https": "https://192.168.110.1:3128"
-#}
-#set HTTP_PROXY=http://192.168.110.1:3128
-#set HTTPS_PROXY=https://192.168.110.1:3128
+import urllib3
+urllib3.disable_warnings()
 
 
-
+d_id = os.getenv('D_ID')
+d_sec = os.getenv('D_SEC')
+d_reg = os.getenv('D_REG')
 vra_fqdn = "vr-automation.corp.local"
+api_url_base = "https://" + vra_fqdn + "/"
+headers = {'Content-Type': 'application/json'}
+
+# set internet proxy for for communication out of the vPod
+proxies = {
+    "http": "http://192.168.110.1:3128",
+    "https": "https://192.168.110.1:3128"
+}
+
+slack_api_key = os.getenv('SLACK_KEY')
 
 def get_vlp_urn():
     # determine current pod's URN (unique ID) using Main Console guestinfo
@@ -130,7 +138,9 @@ def get_creds(cred_set,vlp_urn_id):
     return(results)
 
 def send_slack_notification(payload):
-    requests.post(url='https://hooks.slack.com/services/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', json=payload)
+    slack_url = 'https://hooks.slack.com/services/'
+    post_url = slack_url + slack_api_key
+    requests.post(url=post_url, proxies=proxies, json=payload)
     return()
 
 
@@ -207,8 +217,8 @@ def create_azure_ca():
               "description": "Azure Cloud Account",
               "subscriptionId": azsub,
               "tenantId": azten,
-              "clientApplicationId": azappkey,
-              "clientApplicationSecretKey": azappid,
+              "clientApplicationId": azappid,
+              "clientApplicationSecretKey": azappkey,
               "regionIds": [
                   "westus"
                ],
@@ -409,7 +419,7 @@ def update_project_rp(proj_Ids,vsphere,aws1,aws2,azure):
                 response = requests.patch(api_url, headers=headers1, data=json.dumps(data), verify=False)
                 if response.status_code == 200:
                     json_data = json.loads(response.content.decode('utf-8'))
-                    print('- Successfully added cloud zones to HOL project')
+                    print('- Successfully added cloud zones to Rainpole project')
                 else:
                     print('- Failed to add cloud zones to Rainpole project')
                     return None
@@ -682,7 +692,7 @@ def create_aws1_image():
         response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
         if response.status_code == 201:
             json_data = json.loads(response.content.decode('utf-8'))
-            print('Successfully created AWS west 1 images')
+            print('- Successfully created AWS west 1 images')
         else:
             print('- Failed to created AWS west 1 images')
             return None
@@ -743,27 +753,20 @@ def create_azure_image():
 #check to see if this vPod was deployed by VLP (is it an active Hands on Lab?)
 result = get_vlp_urn()
 if 'No urn' in result:
-
-    #####################
-    vlp = 'sample.vlp.urn'
-    hol = True
-    print('vlp: ', vlp)
-    print('hol: ', hol)
-
-#    # this pod was not deployed by VLP = keys must be defined at top of this file
-#    hol = False
-#    print('\n\nThis pod was not deployed as a Hands On Lab')
-#    try:
-#        # test to see if public cloud keys are included at start of script
-#        msg = awsid
-#    except:
-#        print('\n\n* * * *   I M P O R T A N T   * * * * *\n')
-#        print('You must provide AWS and Azure key sets at the top of the "2073-configure-public-cloud.py" script')
-#        print('Uncomment the keys, replace with your own and run the configuration batch file again')
-#        print('The script can be found in the "Lab Files" directory on the desktop')
-#        sys.exit()
-#else:
-#    vlp = result
+    # this pod was not deployed by VLP = keys must be defined at top of this file
+    hol = False
+    print('\n\nThis pod was not deployed as a Hands On Lab')
+    try:
+        # test to see if public cloud keys are included at start of script
+        msg = awsid
+    except:
+        print('\n\n* * * *   I M P O R T A N T   * * * * *\n')
+        print('You must provide AWS and Azure key sets at the top of the "2073-configure-public-cloud.py" script')
+        print('Uncomment the keys, replace with your own and run the configuration batch file again')
+        print('The script can be found in the "Lab Files" directory on the desktop')
+        sys.exit()
+else:
+    vlp = result
 
 if hol:
     #this pod is running as a Hands On Lab
@@ -793,15 +796,11 @@ if hol:
         # build and send Slack notification
         info = ""
         info +=(f'*Credential set {cred_set} assigned* \n')
-        info +=(f'{(available_count-1)} sets remaining out of {unreserved_count} available \n')
+        info +=(f'- There are {(available_count-1)} sets remaining out of {unreserved_count} available \n')
         payload = { "text": info }
         send_slack_notification(payload)
 
-print('\n\nPublic cloud credentials found. Configurtion vRealize Automation\n\n')
-
-
-api_url_base = "https://" + vra_fqdn + "/"
-headers = {'Content-Type': 'application/json'}
+print('\n\nPublic cloud credentials found. Configuring vRealize Automation\n\n')
 
 access_key = get_token()
 headers1 = {'Content-Type': 'application/json',
@@ -809,27 +808,28 @@ headers1 = {'Content-Type': 'application/json',
 
 
 print('Creating cloud accounts')
-#create_aws_ca()
-#create_azure_ca()
+create_aws_ca()
+create_azure_ca()
 
 
 print('Tagging cloud zones')
-#c_zones_ids = get_czids()
-#aws_cz1 = tag_aws_cz_west_1(c_zones_ids)
-#aws_cz2 = tag_aws_cz_west_2(c_zones_ids)
-#azure_cz = tag_azure_cz(c_zones_ids)
-#vsphere_cz = tag_vsphere_cz(c_zones_ids)
+c_zones_ids = get_czids()
+aws_cz1 = tag_aws_cz_west_1(c_zones_ids)
+aws_cz2 = tag_aws_cz_west_2(c_zones_ids)
+azure_cz = tag_azure_cz(c_zones_ids)
+vsphere_cz = tag_vsphere_cz(c_zones_ids)
 
 print('Udating projects')
-#project_ids = get_projids()
-#update_project(project_ids,vsphere_cz,aws_cz1,aws_cz2,azure_cz)
+project_ids = get_projids()
+update_project(project_ids,vsphere_cz,aws_cz1,aws_cz2,azure_cz)
+update_project_rp(project_ids,vsphere_cz,aws_cz1,aws_cz2,azure_cz)
 
 print('Creating flavor profiles')
-#create_azure_flavor()
-#create_aws1_flavor()
-#create_aws2_flavor()
+create_azure_flavor()
+create_aws1_flavor()
+create_aws2_flavor()
 
 print('Creating image profiles')
-#create_azure_image()
-#create_aws1_image()
-#create_aws2_image()
+create_azure_image()
+create_aws1_image()
+create_aws2_image()
