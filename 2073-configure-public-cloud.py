@@ -748,6 +748,34 @@ def create_azure_image():
             return None
 
 
+def check_for_assigned(vlpurn):
+    # this function checks the dynamoDB to see if this pod urn already has a credential set assigned
+
+    dynamodb = boto3.resource('dynamodb', aws_access_key_id=d_id, aws_secret_access_key=d_sec, region_name=d_reg)
+    table = dynamodb.Table('HOL-keys')
+
+    response = table.scan(
+        FilterExpression="attribute_exists('vlp_urn_id')",
+        ProjectionExpression="pod, vlp_urn_id"
+    )
+
+    print('response: ', response)
+
+    urns = response['Items']
+
+    print('urns: ', urns)
+
+    urn_assigned = False
+    for i in urns:
+        if i['vlp_urn_id'] == vlpurn:    #This URN already has a key assigned
+            urn_assigned = True
+
+    print('urn assigned? ', urn_assigned)
+
+    return(urn_assigned)
+
+
+
 ##### MAIN #####
 
 #check to see if this vPod was deployed by VLP (is it an active Hands on Lab?)
@@ -768,6 +796,12 @@ if 'No urn' in result:
         sys.exit()
 else:
     vlp = result
+
+
+##############
+check_for_assigned(vlp)
+
+
 
 if hol:
     #this pod is running as a Hands On Lab
