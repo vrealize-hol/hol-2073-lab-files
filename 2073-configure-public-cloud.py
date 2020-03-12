@@ -755,22 +755,14 @@ def check_for_assigned(vlpurn):
     table = dynamodb.Table('HOL-keys')
 
     response = table.scan(
-        FilterExpression="attribute_exists('vlp_urn_id')",
-        ProjectionExpression="pod, vlp_urn_id"
+        FilterExpression="attribute_exists(vlp_urn)",
+        ProjectionExpression="pod, vlp_urn"
     )
-
-    print('response: ', response)
-
     urns = response['Items']
-
-    print('urns: ', urns)
-
     urn_assigned = False
     for i in urns:
-        if i['vlp_urn_id'] == vlpurn:    #This URN already has a key assigned
+        if i['vlp_urn'] == vlpurn:    #This URN already has a key assigned
             urn_assigned = True
-
-    print('urn assigned? ', urn_assigned)
 
     return(urn_assigned)
 
@@ -797,18 +789,20 @@ if 'No urn' in result:
 else:
     vlp = result
 
-
-##############
-check_for_assigned(vlp)
-
-
-
 if hol:
     #this pod is running as a Hands On Lab
+    
+    # find out if this pod already has credentials assigned
+    credentials_used = check_for_assigned(vlp)
+    if credentials_used:
+        print('\n\n\nThis Hands On Lab pod already has credentials assigned')
+        print('You do not need to run this script again')
+        sys.exit()
+        
     assigned_pod = get_available_pod()
     if assigned_pod[0] == 'T0':
         # checking to see if any pod credentials are available
-        print('\n\n\nWARNING - No Hans On Labs public cloud credentials are available now!!')
+        print('\n\n\nWARNING - No Hands On Labs public cloud credentials are available now!!')
         print('Please end this lab and try again later')
         payload = { "text": f"*** WARNING - There are no credential sets available.***" }
         send_slack_notification(payload)
