@@ -1,7 +1,0 @@
-Execute the following commands against one vRealize Automation 8.0 or 8.0.1 cluster member:
-SSH into any node:
-Execute the following:
-vracli cluster exec -- bash -c 'echo -e "FROM vco_private:latest\nRUN sed -i s/root:.*/root:x:18135:0:99999:7:::/g /etc/shadow\nRUN sed -i s/vco:.*/vco:x:18135:0:99999:7:::/g /etc/shadow" | docker build - -t vco_private:latest'
-
-vracli cluster exec -- bash -c 'echo -e "FROM db-image_private:latest\nRUN sed -i s/root:.*/root:x:18135:0:99999:7:::/g /etc/shadow\nRUN sed -i s/postgres:.*/postgres:x:18135:0:99999:7:::/g /etc/shadow" | docker build - -t db-image_private:latest'
-Note:  The "vracli cluster exec" command will ensure all members of the cluster receive the update.
