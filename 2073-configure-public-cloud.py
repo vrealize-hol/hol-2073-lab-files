@@ -791,12 +791,6 @@ else:
 
 if hol:
     #this pod is running as a Hands On Lab
-
-    # The lines below will be removed once the GitHub repository is updated
-    # This it to enusre that the latest version of this script is in place
-    print('\n\nYou must update the GitHub repository before running this script')
-    print('Open GitHub Desktop from the taskbar and click the Fetch Origin button')
-    sys.exit()
     
     # find out if this pod already has credentials assigned
     credentials_used = check_for_assigned(vlp)
