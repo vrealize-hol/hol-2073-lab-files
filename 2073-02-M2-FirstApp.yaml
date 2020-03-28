@@ -8,11 +8,10 @@ resources:
       cpuCount: 1
       totalMemoryMB: 1024
       constraints:
-        - tag: 'hol.cloud.zone.platform:vsphere'
+        - tag: 'compute:vsphere'
       networks:
         - network: '${resource.Cloud_Network_1.id}'
           assignment: static
-      count: 2
   Cloud_Network_1:
     type: Cloud.vSphere.Network
     properties:
