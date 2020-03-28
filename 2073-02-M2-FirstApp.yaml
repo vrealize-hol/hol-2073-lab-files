@@ -15,5 +15,6 @@ resources:
   Cloud_Network_1:
     type: Cloud.vSphere.Network
     properties:
-      name: vsphere-networks
       networkType: existing
+      constraints:
+        -tag: net:vsphere-vm
