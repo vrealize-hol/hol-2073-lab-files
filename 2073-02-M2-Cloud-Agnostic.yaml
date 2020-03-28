@@ -7,5 +7,5 @@ resources:
       image: CentOS7
       flavor: small
       constraints:
-        - tag: 'hol.cloud.zone.platform:vsphere'
+        - tag: 'hol.cloud.zone.platform:aws'
         
