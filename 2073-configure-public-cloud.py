@@ -440,7 +440,7 @@ def tag_vsphere_cz(cz_Ids):
                                         },
                                         {
                                             "key": "hol.cloud.zone.platform",
-                                            "value": "vpshere"
+                                            "value": "vsphere"
                                         }
                                     ]
                         }
