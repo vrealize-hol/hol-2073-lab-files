@@ -17,4 +17,4 @@ resources:
     properties:
       networkType: existing
       constraints:
-        -tag: net:vsphere-vm
+        - tag: net:vsphere-vm
