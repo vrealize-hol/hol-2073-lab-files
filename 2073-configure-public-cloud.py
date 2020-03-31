@@ -778,7 +778,7 @@ def check_for_assigned(vlpurn):
 
 def get_lab_user():
     # find out the email address of the user assigned to this HOL VLP entitlement
-
+    assigned_account = 'URN not found in the current labs database'
     dynamodb = boto3.resource('dynamodb', aws_access_key_id=d_id, aws_secret_access_key=d_sec, region_name=d_reg)
     table = dynamodb.Table('HOL-2073-current-labs')
 
