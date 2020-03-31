@@ -68,19 +68,6 @@ def get_vlp_urn():
     else:
         return('Error: VMware tools not found')
 
-def vra_ready():  # this is a proxy to test whether vRA is ready or not since the deployments service is one of the last to come up
-    api_url = '{0}deployment/api/deployments'.format(api_url_base)
-    response = requests.get(api_url, headers=headers1, verify=False)
-    if response.status_code == 200:
-        json_data = json.loads(response.content.decode('utf-8'))
-        deployments = extract_values(json_data,'id')
-        ready = True
-        print('vra is ready')
-    else:
-        ready = False
-        print('vra is NOT ready')
-    return(ready)
-
 
 def get_available_pod():
     # this function checks the dynamoDB to see if there are any available AWS and Azure key sets to configure the cloud accounts
@@ -187,6 +174,19 @@ def get_token():
         return key
     else:
         return None
+
+def vra_ready():  # this is a proxy to test whether vRA is ready or not since the deployments service is one of the last to come up
+    api_url = '{0}deployment/api/deployments'.format(api_url_base)
+    response = requests.get(api_url, headers=headers1, verify=False)
+    if response.status_code == 200:
+        json_data = json.loads(response.content.decode('utf-8'))
+        deployments = extract_values(json_data,'id')
+        ready = True
+        print('vra is ready')
+    else:
+        ready = False
+        print('vra is NOT ready')
+    return(ready)
 
 def create_aws_ca():
     api_url = '{0}iaas/api/cloud-accounts-aws'.format(api_url_base)
