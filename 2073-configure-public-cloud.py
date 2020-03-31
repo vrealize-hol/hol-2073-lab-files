@@ -789,14 +789,15 @@ if access_key == 'not ready':  # we are not even getting an auth token from vRA 
     print('Wait for the lab status to be *Ready* and then run this script again')
     sys.exit()    
 
+headers1 = {'Content-Type': 'application/json',
+           'Authorization': 'Bearer {0}'.format(access_key)}
+
 if not vra_ready():
     print('\n\n\nvRA is not yet ready in this Hands On Lab pod - the provisioning service is not running')
     print('Wait for the lab status to be *Ready* and then run this script again')
     sys.exit()        
 
 # vRA is ready - continue on
-headers1 = {'Content-Type': 'application/json',
-           'Authorization': 'Bearer {0}'.format(access_key)}
 
 # check to see if this vPod was deployed by VLP (is it an active Hands on Lab?)
 result = get_vlp_urn()
