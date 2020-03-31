@@ -32,10 +32,6 @@ d_sec = os.getenv('D_SEC')
 d_reg = os.getenv('D_REG')
 vra_fqdn = "vr-automation.corp.local"
 api_url_base = "https://" + vra_fqdn + "/"
-headers = {'Content-Type': 'application/json'}
-headers1 = {'Content-Type': 'application/json',
-           'Authorization': 'Bearer {0}'.format(access_key)}
-
 
 # set internet proxy for for communication out of the vPod
 proxies = {
@@ -789,6 +785,7 @@ headers = {'Content-Type': 'application/json'}
 headers1 = {'Content-Type': 'application/json',
            'Authorization': 'Bearer {0}'.format(access_key)}
 access_key = get_token()
+
 if access_key == 'not ready':  # we are not even getting an auth token from vRA yet
     print('\n\n\nvRA is not yet ready in this Hands On Lab pod - no access token yet')
     print('Wait for the lab status to be *Ready* and then run this script again')
