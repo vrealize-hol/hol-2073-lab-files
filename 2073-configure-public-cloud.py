@@ -785,6 +785,9 @@ def check_for_assigned(vlpurn):
 
 ##### MAIN #####
 # find out if vRA is ready. if not ready we need to exit or the configuration will fail
+headers = {'Content-Type': 'application/json'}
+headers1 = {'Content-Type': 'application/json',
+           'Authorization': 'Bearer {0}'.format(access_key)}
 access_key = get_token()
 if access_key == 'not ready':  # we are not even getting an auth token from vRA yet
     print('\n\n\nvRA is not yet ready in this Hands On Lab pod - no access token yet')
