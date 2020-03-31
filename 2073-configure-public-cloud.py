@@ -9,7 +9,6 @@
 # azappkey = "put your azure application key here"
 # azappid = "put your azure application id here"
 
-
 import json
 import requests
 import time
@@ -68,6 +67,19 @@ def get_vlp_urn():
         
     else:
         return('Error: VMware tools not found')
+
+def vra_ready():  # this is a proxy to test whether vRA is ready or not since the deployments service is one of the last to come up
+    api_url = '{0}deployment/api/deployments'.format(api_url_base)
+    response = requests.get(api_url, headers=headers1, verify=False)
+    if response.status_code == 200:
+        json_data = json.loads(response.content.decode('utf-8'))
+        deployments = extract_values(json_data,'id')
+        ready = True
+        print('vra is ready')
+    else:
+        ready = False
+        print('vra is NOT ready')
+    return(ready)
 
 
 def get_available_pod():
@@ -791,6 +803,12 @@ else:
 
 if hol:
     #this pod is running as a Hands On Lab
+
+    # find out if vRA is ready. if not ready we need to exit or the configuration will fail
+    if not vra_ready():
+        print('\n\n\nvRA is not yet ready in this Hands On Lab pod')
+        print('Wait for the lab status to be *Ready* and then run this script again')
+        sys.exit()        
     
     # find out if this pod already has credentials assigned
     credentials_used = check_for_assigned(vlp)
@@ -846,7 +864,7 @@ c_zones_ids = get_czids()
 aws_cz1 = tag_aws_cz_west_1(c_zones_ids)
 aws_cz2 = tag_aws_cz_west_2(c_zones_ids)
 azure_cz = tag_azure_cz(c_zones_ids)
-vsphere_cz = tag_vsphere_cz(c_zones_ids)
+vsphere_cz = tag_vsphere_cz(c_zones_ids)  # really this is to rename the cloud zone but it also resets the tags
 
 print('Udating projects')
 project_ids = get_projids()
