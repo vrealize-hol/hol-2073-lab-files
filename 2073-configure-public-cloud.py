@@ -782,8 +782,6 @@ def check_for_assigned(vlpurn):
 ##### MAIN #####
 # find out if vRA is ready. if not ready we need to exit or the configuration will fail
 headers = {'Content-Type': 'application/json'}
-headers1 = {'Content-Type': 'application/json',
-           'Authorization': 'Bearer {0}'.format(access_key)}
 access_key = get_token()
 
 if access_key == 'not ready':  # we are not even getting an auth token from vRA yet
@@ -797,6 +795,8 @@ if not vra_ready():
     sys.exit()        
 
 # vRA is ready - continue on
+headers1 = {'Content-Type': 'application/json',
+           'Authorization': 'Bearer {0}'.format(access_key)}
 
 # check to see if this vPod was deployed by VLP (is it an active Hands on Lab?)
 result = get_vlp_urn()
