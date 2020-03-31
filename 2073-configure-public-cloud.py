@@ -848,7 +848,7 @@ if hol:
         # checking to see if any pod credentials are available
         print('\n\n\nWARNING - No Hands On Labs public cloud credentials are available now!!')
         print('There is a limited set of credentials available to share across active labs and they are all in use')
-        print('Please end this lab and try again later')
+        print('Please either wait a bit and run this script again or end this lab and try again later')
         payload = { "text": f"*WARNING - There are no credential sets available for {lab_user}*" }
         send_slack_notification(payload)
         sys.exit()
