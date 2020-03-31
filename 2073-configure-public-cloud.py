@@ -776,6 +776,22 @@ def check_for_assigned(vlpurn):
     return(urn_assigned)
 
 
+def get_lab_user():
+    # find out the email address of the user assigned to this HOL VLP entitlement
+
+    dynamodb = boto3.resource('dynamodb', aws_access_key_id=d_id, aws_secret_access_key=d_sec, region_name=d_reg)
+    table = dynamodb.Table('HOL-2073-current-labs')
+
+    response = table.scan(
+        FilterExpression=Attr('vapp_urn').eq(vlp),
+        ProjectionExpression="account"
+    )
+    accounts = response['Items']
+    for i in accounts:
+        assigned_account = i['account']    # get the account name (email address)
+
+    return(assigned_account)    
+
 
 ##### MAIN #####
 # find out if vRA is ready. if not ready we need to exit or the configuration will fail
@@ -818,6 +834,7 @@ else:
 
 if hol:
     #this pod is running as a Hands On Lab
+    lab_user = get_lab_user()  # find out who is assigned to this lab
 
     # find out if this pod already has credentials assigned
     credentials_used = check_for_assigned(vlp)
@@ -830,8 +847,9 @@ if hol:
     if assigned_pod[0] == 'T0':
         # checking to see if any pod credentials are available
         print('\n\n\nWARNING - No Hands On Labs public cloud credentials are available now!!')
+        print('There are a limited set of credentials available to share across all active labs')
         print('Please end this lab and try again later')
-        payload = { "text": f"*** WARNING - There are no credential sets available.***" }
+        payload = { "text": f"*WARNING - There are no credential sets available for {lab_user}*" }
         send_slack_notification(payload)
         sys.exit()
 
@@ -851,7 +869,7 @@ if hol:
 
         # build and send Slack notification
         info = ""
-        info +=(f'*Credential set {cred_set} assigned* \n')
+        info +=(f'*Credential set {cred_set} assigned to {lab_user}* \n')
         info +=(f'- There are {(available_count-1)} sets remaining out of {unreserved_count} available \n')
         payload = { "text": info }
         send_slack_notification(payload)
