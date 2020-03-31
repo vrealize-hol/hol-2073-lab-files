@@ -181,10 +181,8 @@ def vra_ready():  # this is a proxy to test whether vRA is ready or not since th
         json_data = json.loads(response.content.decode('utf-8'))
         deployments = extract_values(json_data,'id')
         ready = True
-        print('vra is ready')
     else:
         ready = False
-        print('vra is NOT ready')
     return(ready)
 
 def create_aws_ca():
