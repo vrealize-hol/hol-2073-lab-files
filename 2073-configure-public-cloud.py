@@ -451,7 +451,13 @@ def tag_vsphere_cz(cz_Ids):
                                             "key": "hol.cloud.zone.platform",
                                             "value": "vsphere"
                                         }
-                                    ]
+                                    ],
+                            "tagsToMatch": [
+                                {
+                                    "key": "compute",
+                                    "value": "vsphere"
+                                }
+                            ]
                         }
                 response = requests.patch(api_url, headers=headers1, data=json.dumps(data), verify=False)
                 if response.status_code == 200:
