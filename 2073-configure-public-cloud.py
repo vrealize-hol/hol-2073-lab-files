@@ -186,8 +186,6 @@ def vra_ready():  # this is a proxy to test whether vRA is ready or not since th
     api_url = '{0}deployment/api/deployments'.format(api_url_base)
     response = requests.get(api_url, headers=headers1, verify=False)
     if response.status_code == 200:
-        json_data = json.loads(response.content.decode('utf-8'))
-        deployments = extract_values(json_data,'id')
         ready = True
     else:
         ready = False
@@ -221,7 +219,6 @@ def create_aws_ca():
             }
     response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
     if response.status_code == 201:
-        json_data = json.loads(response.content.decode('utf-8'))
         print('- Successfully Created AWS Cloud Account')
     else:
         print('- Failed to Create the AWS Cloud Account')
@@ -253,7 +250,6 @@ def create_azure_ca():
             }
     response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
     if response.status_code == 201:
-        json_data = json.loads(response.content.decode('utf-8'))
         print('- Successfully Created Azure Cloud Account')
     else:
         print('- Failed to create the Azure Cloud Account')
@@ -406,7 +402,6 @@ def update_project(proj_Ids,vsphere,aws1,aws2,azure):
                         }
                 response = requests.patch(api_url, headers=headers1, data=json.dumps(data), verify=False)
                 if response.status_code == 200:
-                    json_data = json.loads(response.content.decode('utf-8'))
                     print('- Successfully added cloud zones to HOL Project')
                 else:
                     print('- Failed to add cloud zones to HOL Project')
@@ -435,7 +430,6 @@ def update_project_rp(proj_Ids,vsphere,aws1,aws2,azure):
                         }
                 response = requests.patch(api_url, headers=headers1, data=json.dumps(data), verify=False)
                 if response.status_code == 200:
-                    json_data = json.loads(response.content.decode('utf-8'))
                     print('- Successfully added cloud zones to Rainpole project')
                 else:
                     print('- Failed to add cloud zones to Rainpole project')
@@ -469,7 +463,6 @@ def tag_vsphere_cz(cz_Ids):
                         }
                 response = requests.patch(api_url, headers=headers1, data=json.dumps(data), verify=False)
                 if response.status_code == 200:
-                    json_data = json.loads(response.content.decode('utf-8'))
                     print('- Successfully Tagged vSphere Cloud Zone')
                     return(cloudzone_id)
                 else:
@@ -500,7 +493,6 @@ def tag_aws_cz_west_1(cz_Ids):
                         }
                 response = requests.patch(api_url, headers=headers1, data=json.dumps(data), verify=False)
                 if response.status_code == 200:
-                    json_data = json.loads(response.content.decode('utf-8'))
                     print('- Successfully Tagged AWS Cloud Zone - us-west-1')
                     return cloudzone_id
                 else:
@@ -528,7 +520,6 @@ def tag_aws_cz_west_2(cz_Ids):
                         }
                 response = requests.patch(api_url, headers=headers1, data=json.dumps(data), verify=False)
                 if response.status_code == 200:
-                    json_data = json.loads(response.content.decode('utf-8'))
                     print('- Successfully tagged AWS cloud zone - us-west-2')
                     return cloudzone_id
                 else:
@@ -556,7 +547,6 @@ def tag_azure_cz(cz_Ids):
                         }
                 response = requests.patch(api_url, headers=headers1, data=json.dumps(data), verify=False)
                 if response.status_code == 200:
-                    json_data = json.loads(response.content.decode('utf-8'))
                     print('- Successfully tagged Azure cloud zone')
                     return cloudzone_id
                 else:
@@ -601,7 +591,6 @@ def create_azure_flavor():
             }
     response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
     if response.status_code == 201:
-        json_data = json.loads(response.content.decode('utf-8'))
         print('- Successfully created Azure flavor mapping')
     else:
         print('- Failed to create Azure flavor mapping')
@@ -645,7 +634,6 @@ def create_aws1_flavor():
                 }
         response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
         if response.status_code == 201:
-            json_data = json.loads(response.content.decode('utf-8'))
             print('- Successfully created AWS west 1 flavors')
         else:
             print('- Failed to created AWS west 1 flavors')
@@ -689,7 +677,6 @@ def create_aws2_flavor():
                 }
         response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
         if response.status_code == 201:
-            json_data = json.loads(response.content.decode('utf-8'))
             print('- Successfully created AWS west 2 flavors')
         else:
             print('- Failed to created AWS flavors')
@@ -714,7 +701,6 @@ def create_aws1_image():
                 }
         response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
         if response.status_code == 201:
-            json_data = json.loads(response.content.decode('utf-8'))
             print('- Successfully created AWS west 1 images')
         else:
             print('- Failed to created AWS west 1 images')
@@ -739,7 +725,6 @@ def create_aws2_image():
                 }
         response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
         if response.status_code == 201:
-            json_data = json.loads(response.content.decode('utf-8'))
             print('- Successfully created AWS west 2 images')
         else:
             print('- Failed to created AWS west 2 images')
@@ -764,7 +749,6 @@ def create_azure_image():
                 }
         response = requests.post(api_url, headers=headers1, data=json.dumps(data), verify=False)
         if response.status_code == 201:
-            json_data = json.loads(response.content.decode('utf-8'))
             print('- Successfully created Azure images')
         else:
             print('- Failed to created Azure images')
